@@ -32,7 +32,12 @@ public class CharacterCounter {
     private static int countLines(String line, int count) {
         return count+1;
     }
+    private static void _handle_err(String log_msg, String method) {
+        long threadId = Thread.currentThread().threadId();
+        System.out.println(String.format("%s - method : %s [%s]", log_msg, method, threadId));
+    }
     public static void main(String[] args) {
+        final String _current_ = "main";
         Banner banner = new Banner();
         banner.print("Character Counter");
         // Ask for file name from user
@@ -52,7 +57,8 @@ public class CharacterCounter {
         try {
             file_scanner = new Scanner(file);
         } catch(Exception exception) {
-            System.out.println(String.format("File %s not found as %s", input, dir+input));
+            _handle_err(String.format("File %s not found as %s", input, dir+input), _current_);
+            System.out.println(exception.getLocalizedMessage());
         } finally {
             System.out.println(String.format("Completed %s", ((file_scanner != null) ? input+"\n" : "")));
         } 
