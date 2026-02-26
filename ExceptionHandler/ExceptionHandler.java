@@ -6,7 +6,7 @@
  Artee Dubey
  February 24, 2026
 */
-package ExceptionHandler;
+// package ExceptionHandler;
 
 import java.util.Scanner;
 
@@ -36,6 +36,7 @@ class Banner {
         for (String banner : banners) {
             System.out.println(_auto_frame(banner));
         }
+        String[] files = new String[3];
         System.out.printf("%s%n", "*".repeat(WINDOW_LENGTH));
     }
 }
