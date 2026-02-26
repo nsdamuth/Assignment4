@@ -6,13 +6,39 @@
  Artee Dubey
  February 24, 2026
 */
-package CharacterCounter;
+// package CharacterCounter;
 
 import java.io.File;
 import java.util.Scanner;
 // import java.nio.file.*;
 
-import Banner.Banner;
+// import Banner.Banner;
+// Moved Banner back to this file instead of its own package to keep things easier for review and sharing
+class Banner {
+    final static int WINDOW_LENGTH = 100;
+    // Retained here rather than abstracted into its own package for the purpose of keeping all the code in a single file
+    private static String _framed_center(String text, int width, String border) {
+        border = (border != null) ? border : "*";
+        int inner = width - 2;
+        int padding = inner - text.length();
+        int left = padding / 2;
+        int right = padding - left;
+
+        return border + " ".repeat(left) + text + " ".repeat(right) + border;
+    }
+    public static String _auto_frame(String banner) {
+        return _framed_center(banner, WINDOW_LENGTH, null);
+    }
+    public void print(String name) {
+        // Generic banner for class
+        String[] banners = {name, "Nicholas S. Damuth", "School of Technology and Engineering, National University", "CSC262: Programming in JAVA", "Artee Dubey", "February 24, 2026"};
+        System.out.printf("%s%n", "*".repeat(WINDOW_LENGTH));
+        for (String banner : banners) {
+            System.out.println(_auto_frame(banner));
+        }
+        System.out.printf("%s%n", "*".repeat(WINDOW_LENGTH));
+    }
+}
 
 public class CharacterCounter {
     private static int countCharacters(String line, int count) {
@@ -48,7 +74,11 @@ public class CharacterCounter {
         // Keeping things simple instead of using java.nio.file to check if file exists
         System.out.println("Enter the name of the files to use: (e.g. sample.txt)");
         String input = scanner.nextLine().trim();
-        String dir = "./CharacterCounter/";
+
+        // Original String dir line below was to support when compiles for support local package imports
+        // Retained for as needed - comment out blank dir if using.
+        // String dir = "./CharacterCounter/";
+        String dir = "";
         File file = new File(dir+input);
 
         // File manager scanner
