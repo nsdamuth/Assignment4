@@ -6,7 +6,9 @@ import java.io.FileNotFoundException;
 
 public class CharacterCountAF {
     public static int countCharacters(String line) {
+
         return line.length();
+
     }
     public static int countWords(String line) {
         String[] words = line.split("\\s+");
@@ -22,32 +24,30 @@ public class CharacterCountAF {
         String fileName = userInput.nextLine();
         userInput.close();
 
-        // Declare fileScanner here before the try, but as a null, then instantiate inside the try
+        int totalCharacters = 0;
+        int totalWords = 0;
+        int totalLines = 0;
+
+        Scanner fileScanner = null;
+
         try {
-            Scanner fileScanner = new Scanner(new File(fileName));
-
-            // Move all of this outside the try. 
-            int totalCharacters = 0;
-            int totalWords = 0;
-            int totalLines = 0;
-
-            while (fileScanner.hasNextLine()){
-                String line = fileScanner.nextLine();
-
-                totalCharacters += countCharacters(line);
-                totalWords += countWords(line);
-                totalLines += countLines();
-            }
-
-            fileScanner.close();
-
-            System.out.println("Total characters: " + totalCharacters);
-            System.out.println("Total words: " + totalWords);
-            System.out.println("Total lines: " + totalLines);
-            //
+            fileScanner = new Scanner(new File(fileName));
         }
-        catch(FileNotFoundException e){
-            System.out.println("File \"" + fileName + "\" not found");
+        catch (FileNotFoundException e) {
+            System.out.println("File \"" + fileName + "\" not found.");
         }
+        while (fileScanner.hasNextLine()){
+            String line = fileScanner.nextLine();
+
+            totalCharacters += countCharacters(line);
+            totalWords += countWords(line);
+            totalLines += countLines();
+        }
+
+        fileScanner.close();
+
+        System.out.println("Total characters: " + totalCharacters);
+        System.out.println("Total words: " + totalWords);
+        System.out.println("Total lines: " + totalLines);
     }
 }
