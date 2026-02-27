@@ -10,6 +10,7 @@
 // package ExceptionHandler;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -20,9 +21,10 @@ import javax.annotation.processing.FilerException;
 // keep things easier for review and sharing
 class Result {
     int ave;
-    int smallest;
+    Integer smallest;
     int largest;
     int range;
+    int errors;
 }
 class Banner {
     final static int WINDOW_LENGTH = 100;
@@ -53,10 +55,13 @@ class Banner {
 
 public class ExceptionHandler {
     private static void display_output(Result result) {
-        System.out.println(String.format("Average of the input value : %s", result.ave));
-        System.out.println(String.format("Smallest value : %s", result.smallest));
-        System.out.println(String.format("Largest value : %s", result.largest));
-        System.out.println(String.format("Range : %s", result.range));
+        if (result.errors != 0) {
+            System.out.println(String.format("  There was an %s error%s processing the file\n   Using only processed values.", result.errors, (result.errors > 1) ? "s" : ""));
+        }
+        System.out.println(String.format("  Average of the input value : %s", result.ave));
+        System.out.println(String.format("  Smallest value : %s", result.smallest));
+        System.out.println(String.format("  Largest value : %s", result.largest));
+        System.out.println(String.format("  Range : %s", result.range));
     }
     // Keeping this here and simple rather than an err-logging class 
     // in its own package for simplicity sake similar to banner
@@ -64,7 +69,8 @@ public class ExceptionHandler {
         long threadId = Thread.currentThread().threadId();
         System.out.println(String.format("%s - method : %s [%s]", log_msg, method, threadId));
     }
-    public static void main(String[] args) {
+    // Not using a Binary Tree for this version to keep things simple for team
+        public static void main(String[] args) {
         Banner banner = new Banner();
         banner.print("Exception Handler"); 
         
@@ -78,7 +84,7 @@ public class ExceptionHandler {
             try {
                 file_scanner = new Scanner(filename);
             } catch (Exception exception) {
-                _handle_err(String.format("Failed to open file %s", file), "main:file_scanner");
+                _handle_err(String.format(" Failed to open file %s", file), "main:file_scanner");
             }
 
             boolean read_file = true;
@@ -86,20 +92,32 @@ public class ExceptionHandler {
             if (file_scanner != null) {
                 System.out.println(String.format("Reading file %s", filename));
                 int i = 1;
+                ArrayList<Integer> values = new ArrayList<>();
                 while (read_file) {
                     Integer value = null;
                     try {
                         value = file_scanner.nextInt();
                     } catch (java.util.InputMismatchException e) {
-                        _handle_err(String.format("Failed to convert value (%s) on line %s for file %s", value, i, file), "main:file_scanner.nextInt()");
+                        _handle_err(String.format(" Failed to convert value (%s) on line %s for file %s", value, i, file), "main:file_scanner.nextInt()");
+                        result.errors = result.errors +1;
                         read_file = false;
                     } catch (NoSuchElementException exception) {
                         read_file = false;
-                    } finally {
-                        // Add logic for Result parsing
+                    }
+                    if (value != null) {
+                        result.ave = result.ave + value;
+                        if (value > result.largest) {
+                            result.largest = value;
+                        }
+                        if (result.smallest  == null || result.smallest  > value) {
+                            result.smallest  = value;
+                        }
+                        result.range = result.largest - result.smallest;
                     }
                     i++;
                 }
+                result.ave = result.ave / i;
+                display_output(result);
                 file_scanner.close();
             }
         }
