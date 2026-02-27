@@ -22,9 +22,11 @@ public class CharacterCountAF {
         String fileName = userInput.nextLine();
         userInput.close();
 
-        try{
+        // Declare fileScanner here before the try, but as a null, then instantiate inside the try
+        try {
             Scanner fileScanner = new Scanner(new File(fileName));
 
+            // Move all of this outside the try. 
             int totalCharacters = 0;
             int totalWords = 0;
             int totalLines = 0;
@@ -42,6 +44,7 @@ public class CharacterCountAF {
             System.out.println("Total characters: " + totalCharacters);
             System.out.println("Total words: " + totalWords);
             System.out.println("Total lines: " + totalLines);
+            //
         }
         catch(FileNotFoundException e){
             System.out.println("File \"" + fileName + "\" not found");
