@@ -9,11 +9,21 @@
 // Github repo: https://github.com/nsdamuth/Assignment4.git
 // package ExceptionHandler;
 
+import java.io.File;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
+
+import javax.annotation.processing.FilerException;
 
 // import Banner.Banner;
 // Moved Banner back to this file instead of its own package to 
 // keep things easier for review and sharing
+class Result {
+    int ave;
+    int smallest;
+    int largest;
+    int range;
+}
 class Banner {
     final static int WINDOW_LENGTH = 100;
     // Retained here rather than abstracted into its own package for the purpose 
@@ -37,12 +47,17 @@ class Banner {
         for (String banner : banners) {
             System.out.println(_auto_frame(banner));
         }
-        String[] files = new String[3];
         System.out.printf("%s%n", "*".repeat(WINDOW_LENGTH));
     }
 }
 
 public class ExceptionHandler {
+    private static void display_output(Result result) {
+        System.out.println(String.format("Average of the input value : %s", result.ave));
+        System.out.println(String.format("Smallest value : %s", result.smallest));
+        System.out.println(String.format("Largest value : %s", result.largest));
+        System.out.println(String.format("Range : %s", result.range));
+    }
     // Keeping this here and simple rather than an err-logging class 
     // in its own package for simplicity sake similar to banner
     private static void _handle_err(String log_msg, String method) {
@@ -54,5 +69,40 @@ public class ExceptionHandler {
         banner.print("Exception Handler"); 
         
         Scanner scanner = new Scanner(System.in);
+        
+        String[] files = new String[]{"input1", "input2", "input3"};
+        for (String file: files) {
+            Result result = new Result();
+            File filename = new File(file+".txt");
+            Scanner file_scanner = null;
+            try {
+                file_scanner = new Scanner(filename);
+            } catch (Exception exception) {
+                _handle_err(String.format("Failed to open file %s", file), "main:file_scanner");
+            }
+
+            boolean read_file = true;
+            // This is all very unpleasant way of handling things, scanning for an ElementException to identify EOF
+            if (file_scanner != null) {
+                System.out.println(String.format("Reading file %s", filename));
+                int i = 1;
+                while (read_file) {
+                    Integer value = null;
+                    try {
+                        value = file_scanner.nextInt();
+                    } catch (java.util.InputMismatchException e) {
+                        _handle_err(String.format("Failed to convert value (%s) on line %s for file %s", value, i, file), "main:file_scanner.nextInt()");
+                        read_file = false;
+                    } catch (NoSuchElementException exception) {
+                        read_file = false;
+                    } finally {
+                        // Add logic for Result parsing
+                    }
+                    i++;
+                }
+                file_scanner.close();
+            }
+        }
+        scanner.close();
     }
 }
