@@ -1,4 +1,4 @@
-package assignment4;
+// package assignment4;
 
 import java.util.Scanner;
 import java.io.File;
@@ -36,18 +36,20 @@ public class CharacterCountAF {
         catch (FileNotFoundException e) {
             System.out.println("File \"" + fileName + "\" not found.");
         }
-        while (fileScanner.hasNextLine()){
-            String line = fileScanner.nextLine();
+        if (fileScanner != null) {
+            while (fileScanner.hasNextLine()){
+                String line = fileScanner.nextLine();
 
-            totalCharacters += countCharacters(line);
-            totalWords += countWords(line);
-            totalLines += countLines();
+                totalCharacters += countCharacters(line);
+                totalWords += countWords(line);
+                totalLines += countLines();
+            }
+
+            fileScanner.close();
+
+            System.out.println("Total characters: " + totalCharacters);
+            System.out.println("Total words: " + totalWords);
+            System.out.println("Total lines: " + totalLines);
         }
-
-        fileScanner.close();
-
-        System.out.println("Total characters: " + totalCharacters);
-        System.out.println("Total words: " + totalWords);
-        System.out.println("Total lines: " + totalLines);
     }
 }
