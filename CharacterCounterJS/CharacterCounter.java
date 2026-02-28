@@ -1,4 +1,4 @@
-package myClass;
+// package myClass;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -14,14 +14,14 @@ public class CharacterCounter {
 		
 		
 		try {
-			Scanner fileScanner = newScanner(new File(fileName));
+			Scanner fileScanner = new Scanner(new File(fileName));
 			
 			
 			int totalCharacters = 0;
 			int totalWords = 0;
 			int totalLines = 0;
 			
-			
+			System.out.println(fileName);
 			while (fileScanner .hasNextLine()) {
 				String line = fileScanner .nextLine();
 				totalLines++;
@@ -38,8 +38,9 @@ public class CharacterCounter {
 			System.out.println("Number of lines: " + totalLines);
 			
 			
-		} catch (FileNotFoundException e) {
+		} catch (Exception e) {
 			System.out.println("File not found: " + fileName);
+			System.out.print(e.getLocalizedMessage());
 		}
 			
 			
@@ -53,10 +54,10 @@ public class CharacterCounter {
 	}
 
 
-	private static int countWords(String line) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	// private static int countWords(String line) {
+	// 	// TODO Auto-generated method stub
+	// 	return 0;
+	// }
 
 
 	// Count characters in a line (including spaces)
@@ -74,3 +75,4 @@ public class CharacterCounter {
 		String[] words = line.trim().split("\\s+");
 		return words.length;
 	}
+}
